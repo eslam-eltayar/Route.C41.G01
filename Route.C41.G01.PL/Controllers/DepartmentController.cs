@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting;
@@ -83,13 +84,12 @@ namespace Route.C41.G01.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute]int id,Department department)
         {
             if (id != department.Id)
                 return BadRequest();
                 //return BadRequest("An Error Ya Hamadaaaaaaa !!");
-
-
 
             if (!ModelState.IsValid)
                 return View(department);
