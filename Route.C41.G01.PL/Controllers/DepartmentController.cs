@@ -34,12 +34,17 @@ namespace Route.C41.G01.PL.Controllers
             return View(departments);
         }
 
+
+        // Create 
+
         // /Depertment/Create
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
+
+
 
         [HttpPost]
         public IActionResult Create(Department department)
@@ -52,6 +57,8 @@ namespace Route.C41.G01.PL.Controllers
             }
             return View();
         }
+
+        // Details
 
         [HttpGet]
         public IActionResult Details(int? id, string viewName = "Details")
@@ -67,6 +74,7 @@ namespace Route.C41.G01.PL.Controllers
             return View(viewName, department);
 
         }
+        //Edit
 
         // /Department/Edit/10
         [HttpGet]
@@ -83,13 +91,16 @@ namespace Route.C41.G01.PL.Controllers
             ///
         }
 
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public IActionResult Edit([FromRoute] int id, Department department)
         {
             if (id != department.Id)
                 return BadRequest();
-                //return BadRequest("An Error Ya Hamadaaaaaaa !!");
+            //return BadRequest("An Error Ya Hamadaaaaaaa !!");
 
             if (!ModelState.IsValid)
                 return View(department);
@@ -111,6 +122,37 @@ namespace Route.C41.G01.PL.Controllers
 
                 return View(department);
             }
+        }
+
+        // Delete
+        public IActionResult Delete(int? id)
+        {
+            return Details(id, "Delete");
+
+        }
+
+
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            try
+            {
+                _departmentRepo.Delete(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // 1. Log Execption
+                // 2. Freindly Message 
+
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message); // Add Custom Error
+                else
+                    ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Department!");
+
+                return View(department);
+            }
+
         }
     }
 }
