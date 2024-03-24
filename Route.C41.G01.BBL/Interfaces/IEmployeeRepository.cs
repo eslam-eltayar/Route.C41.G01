@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Route.C41.G01.BBL.Interfaces
 {
-    public interface IDepartmentRepository:IGenericRepository<Department>
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
 
     }
-
 }
