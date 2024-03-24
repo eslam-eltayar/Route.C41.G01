@@ -10,47 +10,29 @@ using System.Threading.Tasks;
 
 namespace Route.C41.G01.BBL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly ApplicationDbContext _dbContext; // Null
-        public EmployeeRepository(ApplicationDbContext dbContext) // Ask CLR for creating object from "ApplicationDbContext"
+        // private  readonly ApplicationDbContext _dbContext;
+
+        public EmployeeRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-            _dbContext = dbContext;
+            // _dbContext = dbContext;
         }
 
-        public int Add(Employee entity)
+        public IQueryable<Employee> GetEmployeesByAddress(string address) 
         {
-            _dbContext.Employees.Add(entity);
-            return _dbContext.SaveChanges();
+
+            //return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
+
+            if (string.IsNullOrEmpty(address))
+            {
+                return Enumerable.Empty<Employee>().AsQueryable(); // Return an empty queryable
+            }
+
+            return _dbContext.Employees.Where(E => string.Equals(E.Address, address, StringComparison.OrdinalIgnoreCase));
         }
-
-        public int Update(Employee entity)
-        {
-            _dbContext.Employees.Update(entity);
-            return _dbContext.SaveChanges();
-        }
-
-        public int Delete(Employee entity)
-        {
-            _dbContext.Employees.Remove(entity);
-            return _dbContext.SaveChanges();
-        }
-
-        public Employee Get(int id)
-        {
-            //return _dbContext.Employees.Find(id);
-
-            return _dbContext.Find<Employee>(id); // EF Core 3.1 New Feature
-
-            //var Employee = _dbContext.Employees.Local.Where(D => D.Id == id).FirstOrDefault();
-
-            //if (Employee == null)
-            //    Employee = _dbContext.Employees.Where(D => D.Id == id).FirstOrDefault();
-
-            //return Employee;
-        }
-
-        public IEnumerable<Employee> GetAll()
-            => _dbContext.Employees.AsNoTracking().ToList();
     }
+
+      
+    
 }
