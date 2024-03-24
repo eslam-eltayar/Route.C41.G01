@@ -7,7 +7,7 @@
 <br />
 <br />
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
 
     <div class="form-group">
         <label class="col-form-label" asp-for="Name"></label>
@@ -63,3 +63,9 @@
 
 </form>
 
+@section ValidationScriptsSection{
+
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script src="~/lib/jquer y-validation/dist/jquery.validate.js"></script>
+
+}

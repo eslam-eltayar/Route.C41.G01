@@ -23,7 +23,7 @@ namespace Route.C41.G01.PL.Controllers
         public IActionResult Index()
         {
             var employyes = _employeeRepo.GetAll();
-            return View();
+            return View(employyes);
         }
 
         // Create 
