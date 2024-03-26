@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -58,5 +59,16 @@ namespace Route.C41.G01.DAL.Models
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
+
+
+        //Foreign Key Column
+        //[ForeignKey("Department")]
+        public int? DepartmentId { get; set; }
+
+        /// int? --> Will Mapped to { NoAction Delete } in Database
+
+        // Navigational Property [One]
+        //[InverseProperty(nameof(Models.Department.Employees))]
+        public Department Department { get; set; }
     }
 }

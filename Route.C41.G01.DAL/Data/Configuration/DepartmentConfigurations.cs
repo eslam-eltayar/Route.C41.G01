@@ -28,6 +28,9 @@ namespace Route.C41.G01.DAL.Data.Configuration
                 .IsRequired();
 
 
+
+            builder.HasMany(D => D.Employees)
+                   .WithOne(E=>E.Department);
         }
 
     }
