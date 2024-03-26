@@ -3,24 +3,36 @@
     ViewData["Title"] = "Index";
 }
 
-@* <div class="alert alert-warning">
+@* @* <div class="alert alert-warning">
     @ViewData["Message"]
 </div>
  *@
-<div class="alert alert-success">
+@* <div class="alert alert-success">
     @ViewBag.Message
 </div>
-
+ *@
 @* <div class="alert alert-warning">
     @ViewData["Message"]
 </div>
  *@
 
 @{
-    string ViewDataMSG = ViewData["Message"] as string ; // Enforce Type Safety -> Requires Type Convertion => [ Strongly Type Language ]
+    string ViewDataMSG = ViewData["Message"] as string; // Enforce Type Safety -> Requires Type Convertion => [ Strongly Type Language ]
 
     string ViewBagMSG = ViewBag.Message; // Cant't Enforce Type Safety -> Not Require Type Convertion
 }
+
+
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+
+
+
 <h1>All Employees</h1>
 
 <br />
@@ -55,13 +67,13 @@
                 <tr>
                     <td>@employee.Name</td>
                     <td>@employee.Age</td>
-                    <td>@Html.DisplayFor(M=>employee.Salary)</td>
-                    <td>@Html.DisplayFor(M=>employee.IsActive)</td>
+                    <td>@Html.DisplayFor(M => employee.Salary)</td>
+                    <td>@Html.DisplayFor(M => employee.IsActive)</td>
                     <td>@employee.Gender</td>
-                    <td>@Html.DisplayFor(M=>employee.Email)</td>
-                  
+                    <td>@Html.DisplayFor(M => employee.Email)</td>
 
-                   <partial name="_ButtonPartial" model="@employee.Id"/>
+
+                    <partial name="_ButtonPartial" model="@employee.Id" />
 
                 </tr>
             }

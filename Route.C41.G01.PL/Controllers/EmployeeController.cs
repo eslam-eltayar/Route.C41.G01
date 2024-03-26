@@ -22,6 +22,7 @@ namespace Route.C41.G01.PL.Controllers
         // /Emplyee/Index
         public IActionResult Index()
         {
+            //TempData.Keep();
             // Binding Through View's Dictionary => Transfer Data From Action To View [One Way]
 
             // 1. ViewData => Dictionary object -> Key Value Pair 
@@ -47,14 +48,21 @@ namespace Route.C41.G01.PL.Controllers
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // Server Side Validation
             {
                 var count = _employeeRepo.Add(employee);
+
+                // 3. TempData
+
                 if (count > 0)
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is Created Successfuly";
+                else
+                    TempData["Message"] = "An Error has Occured, Department Not Created :(";
+
+                return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return View(employee);
         }
 
         // Details
