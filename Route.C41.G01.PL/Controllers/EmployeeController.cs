@@ -22,8 +22,18 @@ namespace Route.C41.G01.PL.Controllers
         // /Emplyee/Index
         public IActionResult Index()
         {
-            var employyes = _employeeRepo.GetAll();
-            return View(employyes);
+            // Binding Through View's Dictionary => Transfer Data From Action To View [One Way]
+
+            // 1. ViewData => Dictionary object -> Key Value Pair 
+            ViewData["Message"] = "Hello ViewData";
+
+
+            // 2. ViewBag => Dynamic Property -> Key Value Pair 
+            ViewBag.Message = "Hello ViewBag";
+
+
+            var employees = _employeeRepo.GetAll();
+            return View(employees);
         }
 
         // Create 

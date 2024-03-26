@@ -3,6 +3,24 @@
     ViewData["Title"] = "Index";
 }
 
+@* <div class="alert alert-warning">
+    @ViewData["Message"]
+</div>
+ *@
+<div class="alert alert-success">
+    @ViewBag.Message
+</div>
+
+@* <div class="alert alert-warning">
+    @ViewData["Message"]
+</div>
+ *@
+
+@{
+    string ViewDataMSG = ViewData["Message"] as string ; // Enforce Type Safety -> Requires Type Convertion => [ Strongly Type Language ]
+
+    string ViewBagMSG = ViewBag.Message; // Cant't Enforce Type Safety -> Not Require Type Convertion
+}
 <h1>All Employees</h1>
 
 <br />
