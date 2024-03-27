@@ -12,11 +12,13 @@ namespace Route.C41.G01.PL.Controllers
         
         private readonly IWebHostEnvironment _env;
         private readonly IEmployeeRepository _employeeRepo;
+        //private readonly IDepartmentRepository _departmentRepo;
 
         public EmployeeController(IEmployeeRepository employeeRepo, IWebHostEnvironment env) // Ask CLR for creating an object from class implementing "IDepartmentRepository" Interface
         {
             _employeeRepo = employeeRepo;
             _env = env;
+            //_departmentRepo = departmentRepo;
         }
 
         // /Emplyee/Index
@@ -41,6 +43,9 @@ namespace Route.C41.G01.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //ViewData["Departments"] = _departmentRepo.GetAll();
+            //ViewBag.Departments = _departmentRepo.GetAll();
+
             return View();
         }
 
