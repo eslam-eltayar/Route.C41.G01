@@ -4,12 +4,13 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G01.BBL.Interfaces;
 using Route.C41.G01.DAL.Models;
 using System;
+using System.Linq;
 
 namespace Route.C41.G01.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        
+
         private readonly IWebHostEnvironment _env;
         private readonly IEmployeeRepository _employeeRepo;
         //private readonly IDepartmentRepository _departmentRepo;
@@ -22,7 +23,8 @@ namespace Route.C41.G01.PL.Controllers
         }
 
         // /Emplyee/Index
-        public IActionResult Index()
+        //[HttpGet]
+        public IActionResult Index(string searchInp)
         {
             //TempData.Keep();
             // Binding Through View's Dictionary => Transfer Data From Action To View [One Way]
@@ -34,9 +36,16 @@ namespace Route.C41.G01.PL.Controllers
             // 2. ViewBag => Dynamic Property -> Key Value Pair 
             ViewBag.Message = "Hello ViewBag";
 
+            var employees = Enumerable.Empty<Employee>();
 
-            var employees = _employeeRepo.GetAll();
-            return View(employees);
+            if (string.IsNullOrEmpty(searchInp))
+                employees = _employeeRepo.GetAll();
+            else
+                employees = _employeeRepo.SearchByName(searchInp.ToLower());
+
+
+            return View(employees);  
+
         }
 
         // Create 
@@ -72,7 +81,7 @@ namespace Route.C41.G01.PL.Controllers
 
         // Details
 
-        public IActionResult Details(int? id, string viewName= "Details")
+        public IActionResult Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
                 return BadRequest();

@@ -16,13 +16,13 @@
 </div>
  *@
 
-@{
+@* @{
     string ViewDataMSG = ViewData["Message"] as string; // Enforce Type Safety -> Requires Type Convertion => [ Strongly Type Language ]
 
     string ViewBagMSG = ViewBag.Message; // Cant't Enforce Type Safety -> Not Require Type Convertion
 }
-
-
+ *@
+@* 
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
     <div class="alert alert-success">
@@ -30,7 +30,7 @@
     </div>
 }
 
-
+ *@
 
 
 <h1>All Employees</h1>
@@ -38,9 +38,29 @@
 <br />
 <br />
 
+
+
+
 <a asp-controller="Employee" asp-action="Create" class="btn btn-primary">Create New Employee</a>
 
 <br />
+
+
+<div class="row justify-content-center align-items-center mt-5">
+
+    <form class="row col-8 offset-1" asp-action="Index">
+
+        <div class="col-8">
+            <input type="text" class="form-control" name="searchInp" id="searchInp" placeholder="Search By Name"/>
+        </div>
+
+        <div class="col-4">
+            <input type="submit" value="Search" class="btn btn-success"/>
+        </div>
+
+    </form>
+
+</div>
 
 @if (Model.Count() > 0)
 {
@@ -91,3 +111,4 @@ else
         <h3>There Is No Employees :(</h3>
     </div>
 }
+
