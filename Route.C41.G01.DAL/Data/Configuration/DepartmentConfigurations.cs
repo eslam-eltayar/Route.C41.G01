@@ -27,7 +27,8 @@ namespace Route.C41.G01.DAL.Data.Configuration
                 .HasMaxLength(50)
                 .IsRequired();
 
-
+            builder.Property(D => D.Name).IsRequired();
+            builder.Property(D => D.Code).IsRequired();
 
             builder.HasMany(D => D.Employees)
                    .WithOne(E=>E.Department);

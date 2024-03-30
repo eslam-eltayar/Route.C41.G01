@@ -33,6 +33,7 @@ namespace Route.C41.G01.DAL.Data.Configuration
                 (EmpType) => EmpType.ToString(),
                 (EmpTypeAsString) => (EmpType)Enum.Parse(typeof(EmpType), EmpTypeAsString, true));
 
+            builder.Property(E => E.Name).IsRequired().HasMaxLength(50);
         }
     }
 }
