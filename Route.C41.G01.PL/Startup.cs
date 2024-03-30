@@ -48,6 +48,8 @@ namespace Route.C41.G01.PL
             services.AddApplicationServices(); // Extention Method 
 
             services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
