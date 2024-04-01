@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Route.C41.G01.BBL.Interfaces;
 using Route.C41.G01.BBL.Repositories;
 using Route.C41.G01.DAL.Models;
+using Route.C41.G01.PL.Helpers;
 using Route.C41.G01.PL.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -75,6 +76,8 @@ namespace Route.C41.G01.PL.Controllers
         {
             if (ModelState.IsValid) // Server Side Validation
             {
+
+                employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "images");
 
                 /// Manual Mapping
                 ///var mappedEmp = new Employee()
