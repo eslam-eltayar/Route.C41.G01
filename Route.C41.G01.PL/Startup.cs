@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G01.BBL.Interfaces;
 using Route.C41.G01.BBL.Repositories;
 using Route.C41.G01.DAL.Data;
+using Route.C41.G01.PL.Extentions;
+using Route.C41.G01.PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +39,17 @@ namespace Route.C41.G01.PL
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            }, ServiceLifetime.Scoped /*By Default*/);
 
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            //ApplicationServicesExtention.AddApplicationServices(services);
+            // or
+            
+            services.AddApplicationServices(); // Extention Method 
+
+            services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

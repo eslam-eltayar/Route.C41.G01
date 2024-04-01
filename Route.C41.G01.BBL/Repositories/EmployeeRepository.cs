@@ -19,7 +19,7 @@ namespace Route.C41.G01.BBL.Repositories
             // _dbContext = dbContext;
         }
 
-        public IQueryable<Employee> GetEmployeesByAddress(string address) 
+        public IQueryable<Employee> GetEmployeesByAddress(string address)
         {
 
             //return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
@@ -31,8 +31,11 @@ namespace Route.C41.G01.BBL.Repositories
 
             return _dbContext.Employees.Where(E => string.Equals(E.Address, address, StringComparison.OrdinalIgnoreCase));
         }
+
+        public IQueryable<Employee> SearchByName(string name)
+        => _dbContext.Employees.Where(E => E.Name.Contains(name));
     }
 
-      
-    
+
+
 }
