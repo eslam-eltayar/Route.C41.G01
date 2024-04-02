@@ -34,6 +34,6 @@ namespace Route.C41.G01.DAL.Data
 
         public DbSet<Employee> Employees { get; set; }
 
-       
+
     }
 }

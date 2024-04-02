@@ -58,6 +58,38 @@ namespace Route.C41.G01.PL
             ///services.AddScoped<RoleManager<IdentityRole>>();
 
 
+            services.AddIdentity<ApplicationUser, IdentityRole>( // Allow [ DI ] for three Main Services ( User Manager - Role Manager - SignInManager )
+                options =>
+                {
+                    options.Password.RequiredUniqueChars = 2;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireNonAlphanumeric = true; // @#$%
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequiredLength = 5; // Min Length
+
+
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+
+
+                    //options.User.AllowedUserNameCharacters = "asfavaewfvavavsc";
+
+                    options.User.RequireUniqueEmail = true;
+
+                }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+           // services.AddAuthentication(); // Called By Default when I Use => [ services.AddIdentity ]
+
+
+		}
+
+            ///services.AddScoped<UserManager<ApplicationUser>>();
+            ///services.AddScoped<SignInManager<ApplicationUser>>();
+            ///services.AddScoped<RoleManager<IdentityRole>>();
+
+
             services.AddIdentity<ApplicationUser, IdentityRole>();
 
         }
