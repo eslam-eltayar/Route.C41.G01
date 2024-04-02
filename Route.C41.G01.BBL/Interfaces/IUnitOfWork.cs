@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Route.C41.G01.BBL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         // Signature for Property for each and every Repository Interface
 
@@ -16,7 +16,7 @@ namespace Route.C41.G01.BBL.Interfaces
 
         IGenericRepository<T> Repository<T>() where T : ModelBase;
 
-        int Complete();
+        Task<int> Complete();
         
     }
 }
