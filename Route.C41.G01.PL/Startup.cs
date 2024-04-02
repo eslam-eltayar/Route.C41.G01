@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G01.BBL.Interfaces;
 using Route.C41.G01.BBL.Repositories;
 using Route.C41.G01.DAL.Data;
+using Route.C41.G01.DAL.Models;
 using Route.C41.G01.PL.Extentions;
 using Route.C41.G01.PL.Helpers;
 using System;
@@ -50,6 +52,14 @@ namespace Route.C41.G01.PL
             services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            ///services.AddScoped<UserManager<ApplicationUser>>();
+            ///services.AddScoped<SignInManager<ApplicationUser>>();
+            ///services.AddScoped<RoleManager<IdentityRole>>();
+
+
+            services.AddIdentity<ApplicationUser, IdentityRole>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
