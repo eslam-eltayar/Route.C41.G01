@@ -19,28 +19,22 @@ namespace Route.C41.G01.BBL.Repositories
         }
 
         public void Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-            
-        }
+        => _dbContext.Set<T>().Add(entity);
 
         public void Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            
-        }
+        => _dbContext.Set<T>().Update(entity);
 
         public void Delete(T entity)
-        {
-            _dbContext.Set<T>().Remove(entity);
-            
-        }
+        => _dbContext.Set<T>().Remove(entity);
 
-        public T Get(int id)
+
+
+
+        public async Task<T> GetAsync(int id)
         {
             //return _dbContext.Employees.Find(id);
 
-            return _dbContext.Find<T>(id); // EF Core 3.1 New Feature
+            return await _dbContext.FindAsync<T>(id); // EF Core 3.1 New Feature
 
             //var Employee = _dbContext.Employees.Local.Where(D => D.Id == id).FirstOrDefault();
 
@@ -50,14 +44,16 @@ namespace Route.C41.G01.BBL.Repositories
             //return Employee;
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual async  Task< IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
-                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
-            else
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+                return (IEnumerable<T>) await _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToListAsync();
+            
+
+
+                return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        
+
     }
 }

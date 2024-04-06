@@ -9,6 +9,7 @@ using Route.C41.G01.DAL.Models;
 using Route.C41.G01.PL.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 namespace Route.C41.G01.PL.Controllers
 {
     public class DepartmentController : Controller
@@ -21,7 +22,7 @@ namespace Route.C41.G01.PL.Controllers
         // Composation : DepartmentController has a DepartmentRepository
 
 
-        public DepartmentController(IMapper mapper,IUnitOfWork unitOfWork, IWebHostEnvironment env) // Ask CLR for creating an object from class implementing "IDepartmentRepository" Interface
+        public DepartmentController(IMapper mapper, IUnitOfWork unitOfWork, IWebHostEnvironment env) // Ask CLR for creating an object from class implementing "IDepartmentRepository" Interface
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -32,11 +33,12 @@ namespace Route.C41.G01.PL.Controllers
 
         // Department/Index
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _unitOfWork.Repository<Department>().GetAll();
-            var mappedDep = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
-            return View(mappedDep);
+            var departments = await _unitOfWork.Repository<Department>().GetAllAsync();
+
+            var mappedDepts = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
+            return View(mappedDepts);
         }
 
 
@@ -49,15 +51,18 @@ namespace Route.C41.G01.PL.Controllers
             return View();
         }
 
+
+
         [HttpPost]
-        public IActionResult Create(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+                var mappedDepts = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.Repository<Department>().Add(mappedDep);
-                var count = _unitOfWork.Complete();
+                _unitOfWork.Repository<Department>().Add(mappedDepts);
+
+                var count = await _unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
@@ -67,42 +72,44 @@ namespace Route.C41.G01.PL.Controllers
         // Details
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
                 return BadRequest(); // 400
 
-            var department = _unitOfWork.Repository<Department>().Get(id.Value);
+            var department = await _unitOfWork.Repository<Department>().GetAsync(id.Value);
 
-            var mappedDep = _mapper.Map<Department, DepartmentViewModel>(department);
-
+            var mappedDepts = _mapper.Map<Department, DepartmentViewModel>(department);
 
             if (department is null)
                 return NotFound(); // 404
 
-            return View(viewName, mappedDep);
+            return View(viewName, mappedDepts);
 
         }
         //Edit
 
         // /Department/Edit/10
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
 
             /// if (!id.HasValue)
             ///     return BadRequest();
-            /// var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            /// var department = _unitOfWork.Repository<Department>().Get(id.Value);
             /// if (department is null)
             ///     return NotFound();
             /// return View();
             ///
         }
 
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Edit([FromRoute] int id, DepartmentViewModel departmentVM)
         {
             if (id != departmentVM.Id)
                 return BadRequest();
@@ -113,10 +120,10 @@ namespace Route.C41.G01.PL.Controllers
 
             try
             {
-                var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+                var mappedDepts = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.Repository<Department>().Update(mappedDep);
-                _unitOfWork.Complete();
+                _unitOfWork.Repository<Department>().Update(mappedDepts);
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -134,22 +141,27 @@ namespace Route.C41.G01.PL.Controllers
         }
 
         // Delete
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
 
         }
 
 
         [HttpPost]
-        public IActionResult Delete(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Delete(DepartmentViewModel departmentVM)
         {
             try
             {
-                var mappedDep = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+                var mappedDepts = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.Repository<Department>().Delete(mappedDep);
+                _unitOfWork.Repository<Department>().Delete(mappedDepts);
+                var count = await _unitOfWork.Complete();
+
+                if(count > 0)
                 return RedirectToAction(nameof(Index));
+
+                return View(departmentVM);
             }
             catch (Exception ex)
             {
@@ -164,6 +176,7 @@ namespace Route.C41.G01.PL.Controllers
                 return View(departmentVM);
             }
 
+            
         }
     }
 }

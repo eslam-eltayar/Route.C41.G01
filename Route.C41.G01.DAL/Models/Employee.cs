@@ -57,5 +57,8 @@ namespace Route.C41.G01.DAL.Models
         // Navigational Property [One]
         //[InverseProperty(nameof(Models.Department.Employees))]
         public Department Department { get; set; }
+
+        public string ImageName { get; set; }
+
     }
 }
