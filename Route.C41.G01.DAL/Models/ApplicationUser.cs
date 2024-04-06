@@ -12,5 +12,6 @@ namespace Route.C41.G01.DAL.Models
         public string FName { get; set; }
         public string LName { get; set; }
         public bool IsAgree { get; set; }
+
     }
 }
