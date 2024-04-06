@@ -14,11 +14,10 @@ namespace Route.C41.G01.PL.Controllers
 		private readonly SignInManager<ApplicationUser> _signInManager;
 
 		public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
-        public AccountController(UserManager<ApplicationUser> userManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-            
+
 		}
 
 		#region Sign Up (Register)
@@ -31,17 +30,15 @@ namespace Route.C41.G01.PL.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> SignUp(SignUpViewModel model)
-        public IActionResult SignUp(SignUpViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-                // Manual Mapping
+				// Manual Mapping
 
 				var user = await _userManager.FindByNameAsync(model.UserName);
 
 
 				if (user is null)
-                var user = new ApplicationUser()
 				{
 					// Manual Mapping
 					user = new ApplicationUser()
@@ -51,11 +48,6 @@ namespace Route.C41.G01.PL.Controllers
 						UserName = model.UserName,
 						Email = model.Email,
 						IsAgree = model.IsAgree
-                    FName=model.FirstName,
-                    LName=model.LastName,
-                    UserName=model.UserName,
-                    Email=model.Email,
-                    IsAgree=model.IsAgree
 					};
 
 					var result = await _userManager.CreateAsync(user, model.Password);
