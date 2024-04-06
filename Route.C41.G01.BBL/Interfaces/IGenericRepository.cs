@@ -9,14 +9,14 @@ namespace Route.C41.G01.BBL.Interfaces
 {
     public interface IGenericRepository<T> where T : ModelBase
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
 
-        T Get(int id);
+        Task<T> GetAsync(int id);
 
-        int Add(T entity);
+        void Add(T entity);
 
-        int Update(T entity);
+        void Update(T entity);
 
-        int Delete(T entity);
+        void Delete(T entity);
     }
 }
