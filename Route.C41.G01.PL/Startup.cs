@@ -85,14 +85,7 @@ namespace Route.C41.G01.PL
 
 		}
 
-            ///services.AddScoped<UserManager<ApplicationUser>>();
-            ///services.AddScoped<SignInManager<ApplicationUser>>();
-            ///services.AddScoped<RoleManager<IdentityRole>>();
-
-
-            services.AddIdentity<ApplicationUser, IdentityRole>();
-
-        }
+           
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
