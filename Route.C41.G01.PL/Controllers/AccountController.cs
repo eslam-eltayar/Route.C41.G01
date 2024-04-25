@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Route.C41.G01.DAL.Models;
-using Route.C41.G01.PL.ViewModels.User;
+using Route.C41.G01.PL.ViewModels.Account;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -33,14 +33,10 @@ namespace Route.C41.G01.PL.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				// Manual Mapping
-
 				var user = await _userManager.FindByNameAsync(model.UserName);
-
 
 				if (user is null)
 				{
-					// Manual Mapping
 					user = new ApplicationUser()
 					{
 						FName = model.FirstName,
@@ -50,17 +46,21 @@ namespace Route.C41.G01.PL.Controllers
 						IsAgree = model.IsAgree
 					};
 
-					var result = await _userManager.CreateAsync(user, model.Password);
+					var Result = await _userManager.CreateAsync(user, model.Password);
 
-					if (result.Succeeded)
+					if (Result.Succeeded)
+					{
 						return RedirectToAction(nameof(SignIn));
+					}
 
-
-					foreach (var error in result.Errors)
+					foreach (var error in Result.Errors)
+					{
 						ModelState.AddModelError(string.Empty, error.Description);
-				}
 
-				ModelState.AddModelError(string.Empty, "This username is Already in Use for Another Account! ");
+					}
+
+				}
+				ModelState.AddModelError(string.Empty, "This userName is Already in use for another Account");
 
 			}
 			return View(model);
@@ -70,11 +70,50 @@ namespace Route.C41.G01.PL.Controllers
 
 		#region Sign In
 
+		[HttpGet]
 		public IActionResult SignIn()
 		{
 			return View();
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> SignIn(SignInViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(model.Email);
+
+				if (user is not null)
+				{
+					var flage = await _userManager.CheckPasswordAsync(user, model.Password);
+
+					if (flage)
+					{
+						var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+
+
+						if (result.IsLockedOut)
+							ModelState.AddModelError(string.Empty, "Your Account is Locked !");
+
+
+						if (result.Succeeded)
+							return RedirectToAction(nameof(HomeController.Index), "Home");
+
+						if (result.IsNotAllowed)
+							ModelState.AddModelError(string.Empty, "Your Account is not Confirmed yet!!");
+
+
+					}
+
+				}
+
+				ModelState.AddModelError(string.Empty, "Invalid Login");
+
+			}
+			return View(model);
+		}
+
 		#endregion
 	}
+
 }

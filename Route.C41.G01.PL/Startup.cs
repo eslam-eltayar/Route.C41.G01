@@ -80,7 +80,12 @@ namespace Route.C41.G01.PL
 
                 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
-           // services.AddAuthentication(); // Called By Default when I Use => [ services.AddIdentity ]
+
+
+
+
+
+           services.AddAuthentication(); // Called By Default when I Use => [ services.AddIdentity ]
 
 
 		}

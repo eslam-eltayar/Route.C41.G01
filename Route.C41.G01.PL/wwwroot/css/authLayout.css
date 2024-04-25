@@ -1,4 +1,4 @@
-﻿/*--
+﻿﻿ /*--
 Author: Colorlib
 Author URL: https://colorlib.com
 License: Creative Commons Attribution 3.0 Unported
@@ -166,7 +166,6 @@ input[type="text"], input[type="email"], input[type="password"] {
     font-family: 'Roboto', sans-serif;
 }
 
-input.email,input.text.w3lpass {
 input.email, input.text.w3lpass {
     margin: 2em 0;
 }
@@ -616,7 +615,6 @@ input.checkbox {
     }
 
     input.email, input.text.w3lpass {
-    input.email, input.hamada input.text.w3lpass {
         margin: 1.5em 0;
     }
 
