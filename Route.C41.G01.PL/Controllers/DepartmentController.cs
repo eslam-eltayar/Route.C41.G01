@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace Route.C41.G01.PL.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IMapper _mapper;

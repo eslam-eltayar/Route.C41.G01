@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,10 +47,10 @@ namespace Route.C41.G01.PL
 
             //ApplicationServicesExtention.AddApplicationServices(services);
             // or
-            
+
             services.AddApplicationServices(); // Extention Method 
 
-            services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
+            services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -81,16 +82,34 @@ namespace Route.C41.G01.PL
                 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
 
+            services.ConfigureApplicationCookie(option =>
+            {
+                option.LoginPath = "/Account/SignIn";
+                option.ExpireTimeSpan = TimeSpan.FromDays(1);
+                option.AccessDeniedPath = "/Home/Error";
+            });
+
+
+
+            //services.AddAuthentication("Hamada"); // Called By Default when I Use => [ services.AddIdentity ]
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Identity.Application"; // Set Default Schema
+            })
+                .AddCookie("AnotherScheme", options => // Add Another Scheme
+                {
+                    options.LoginPath = "/Account/SignIn";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                    options.AccessDeniedPath = "/Home/Error";
+                });
 
 
 
 
-           services.AddAuthentication(); // Called By Default when I Use => [ services.AddIdentity ]
+        }
 
 
-		}
-
-           
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -111,6 +130,8 @@ namespace Route.C41.G01.PL
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
+
 
             app.UseEndpoints(endpoints =>
             {
