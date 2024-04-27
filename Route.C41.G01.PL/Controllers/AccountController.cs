@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using Route.C41.G01.DAL.Models;
+using Route.C41.G01.PL.Services;
 using Route.C41.G01.PL.ViewModels.Account;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,12 +14,19 @@ namespace Route.C41.G01.PL.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-
+            _emailSender = emailSender;
+            _configuration = configuration;
         }
 
         #region Sign Up (Register)
@@ -27,6 +36,7 @@ namespace Route.C41.G01.PL.Controllers
         {
             return View();
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpViewModel model)
@@ -39,7 +49,7 @@ namespace Route.C41.G01.PL.Controllers
                 {
                     user = new ApplicationUser()
                     {
-                        
+
                         FName = model.FirstName,
                         LName = model.LastName,
                         UserName = model.UserName,
@@ -53,15 +63,20 @@ namespace Route.C41.G01.PL.Controllers
                     {
                         return RedirectToAction(nameof(SignIn));
                     }
-
-                    foreach (var error in Result.Errors)
+                    else
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        foreach (var error in Result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
 
                     }
 
+
                 }
-                ModelState.AddModelError(string.Empty, "This userName is Already in use for another Account");
+                else
+                    ModelState.AddModelError(string.Empty, "This userName is Already in use for another Account");
+
 
             }
             return View(model);
@@ -129,6 +144,7 @@ namespace Route.C41.G01.PL.Controllers
 
         #region Forget Password
 
+        [HttpGet]
         public IActionResult ForgetPassword()
         {
             return View();
@@ -143,9 +159,61 @@ namespace Route.C41.G01.PL.Controllers
 
                 if (user is not null)
                 {
+                    var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user); // Unique token for this user 
 
+                    var resetPasswordUrl = Url.Action("ResetPassword", "Account", new { email = user.Email, token = resetPasswordToken });
+
+                    // https://localhost:5001/Account/ResetPassword?email=eslam@gmail.com$token=adasdasdcac..
+
+                    await _emailSender.SendAsync(
+                        from: _configuration["EmailSettings:SenderEmail"],
+                        to: model.Email,
+                        Subject: "Reset Your Password",
+                        body: resetPasswordUrl
+                        );
+
+                    return RedirectToAction(nameof(CheckYourInbox));
                 }
                 ModelState.AddModelError(string.Empty, "There is No Account with this Email!");
+            }
+
+            return View(model);
+        }
+
+
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+        #endregion
+
+        #region Reset Password
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["Email"] = email;
+            TempData["Token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = TempData["Email"] as string;
+                var token = TempData["Token"] as string;
+
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user is not null)
+                {
+                    await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+                    return RedirectToAction(nameof(SignIn));
+                }
+
+                ModelState.AddModelError(string.Empty, "Url is not Valid");
             }
 
             return View(model);

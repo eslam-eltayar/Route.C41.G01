@@ -33,11 +33,10 @@ namespace Route.C41.G01.PL
         {
             services.AddControllersWithViews(); // Register Built-In Services Required by MVC
 
-            //services.AddTransient<ApplicationDbContext>();
-            //services.AddSingleton<ApplicationDbContext>();
-
-            //services.AddScoped<ApplicationDbContext>();
-            //services.AddScoped<DbContextOptions<ApplicationDbContext>>();
+            ///services.AddTransient<ApplicationDbContext>();
+            ///services.AddSingleton<ApplicationDbContext>();
+            ///services.AddScoped<ApplicationDbContext>();
+            ///services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -79,7 +78,8 @@ namespace Route.C41.G01.PL
 
                     options.User.RequireUniqueEmail = true;
 
-                }).AddEntityFrameworkStores<ApplicationDbContext>();
+                }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
 
             services.ConfigureApplicationCookie(option =>

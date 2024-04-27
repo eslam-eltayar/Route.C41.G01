@@ -8,7 +8,7 @@
 <div class="main-agileinfo">
     <div class="agileits-top">
         <div asp-validation-summary="ModelOnly"></div>
-        <form asp-action="SignUp>
+        <form asp-action="SignUp" method="post">
             <input class="text email" asp-for="FirstName" placeholder="Firstname" required="">
             <input class="text email" asp-for="LastName" placeholder="Lastname" required="">
             <input class="text email" asp-for="UserName" placeholder="Username" required="">
@@ -22,7 +22,8 @@
                 </label>
                 <div class="clear"> </div>
             </div>
-            <input type="submit" value="SIGNUP">
+
+            <input type="submit" value="SignUp" />
         </form>
         <p>Have an Account? <a asp-action="SignIn"> Login Now!</a></p>
         <p><a asp-action="ForgetPassword"> Forget Password? </a></p>
